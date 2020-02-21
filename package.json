@@ -1,27 +1,28 @@
 {
-  "name": "mytinerary-backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mjbryan10/MYtinerary-backend.git"
-  },
-  "author": "Matthew Bryan",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/mjbryan10/MYtinerary-backend/issues"
-  },
-  "homepage": "https://github.com/mjbryan10/MYtinerary-backend#readme",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "eslint": "^6.8.0",
-    "express": "^4.17.1",
-    "mongoose": "^5.9.1"
-  }
+	"name": "mytinerary-backend",
+	"version": "1.0.0",
+	"description": "",
+	"main": "server.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "concurrently \"nodemon server.js\" \"cd ../client && npm start\""
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mjbryan10/MYtinerary-backend.git"
+	},
+	"author": "Matthew Bryan",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/mjbryan10/MYtinerary-backend/issues"
+	},
+	"homepage": "https://github.com/mjbryan10/MYtinerary-backend#readme",
+	"dependencies": {
+		"body-parser": "^1.19.0",
+		"concurrently": "^5.1.0",
+		"cors": "^2.8.5",
+		"eslint": "^6.8.0",
+		"express": "^4.17.1",
+		"mongoose": "^5.9.1"
+	}
 }
