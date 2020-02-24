@@ -18,7 +18,7 @@ app.listen(port, () => {
 	console.log("Server is running on " + port + "port");
 });
 mongoose
-	.connect(URI, { useNewUrlParser: true, useCreateIndex: true })
+	.connect(URI, { useNewUrlParser: true, useCreateIndex: true,  useUnifiedTopology: true })
 	.then(() => console.log("Connection to Mongo DB established"))
 	.catch(err => console.log(err));
 
