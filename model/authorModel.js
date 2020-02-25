@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
 
-const authorSchema = new mongoose.Schema({
+const authorSchema = new Schema({
 	name: {
 		type: String,
 		required: true
@@ -17,4 +17,4 @@ const authorSchema = new mongoose.Schema({
 });
 
 //name of module is the singular version (city) of the database name (cities)
-module.exports = mongoose.model('author', authorSchema) 
+export default model('author', authorSchema) 

@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import { Schema, model } from "mongoose";
 
-const itinerarySchema = new mongoose.Schema({
+const itinerarySchema = new Schema({
 	city_id: {
 		type: String,
 		required: true
@@ -35,4 +35,4 @@ const itinerarySchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('itinerary', itinerarySchema) 
+export default model('itinerary', itinerarySchema) 

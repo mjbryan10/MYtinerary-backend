@@ -1,11 +1,10 @@
-const express = require("express");
-const itineraryModel = require("../model/itineraryModel");
+import { Router } from "express";
+import { find } from "../model/itineraryModel";
 
-const router = express.Router();
+const router = Router();
 
 router.get("/all", (req, res) => {
-	itineraryModel
-		.find({})
+	find({})
 		.then(files => {
 			res.send(files);
 		})
@@ -17,8 +16,7 @@ router.get("/search", (req, res) => {
 	if (req.body.city_id) {
 		query.city_id = req.body.city_id;
 	}
-	itineraryModel
-		.find(query)
+	find(query)
 		.then(files => {
 			res.send(files);
 		})
@@ -28,4 +26,4 @@ router.get("/search", (req, res) => {
 router.get("/test", (req, res) => {
 	res.send({ msg: "itinerary test route." });
 });
-module.exports = router;
+export default router;

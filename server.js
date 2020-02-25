@@ -1,15 +1,15 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const URI = require("./config.js").uri;
-const bodyParser = require("body-parser");
-const cors = require("cors");
+import express from "express";
+import { connect } from "mongoose";
+import { uri as URI } from "./config.js";
+import { json, urlencoded } from "body-parser";
+import cors from "cors";
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(bodyParser.json());
+app.use(json());
 app.use(
-	bodyParser.urlencoded({
+	urlencoded({
 		extended: true,
 	})
 );
@@ -17,8 +17,7 @@ app.use(cors());
 app.listen(port, () => {
 	console.log("Server is running on " + port + "port");
 });
-mongoose
-	.connect(URI, { useNewUrlParser: true, useCreateIndex: true,  useUnifiedTopology: true })
+connect(URI, { useNewUrlParser: true, useCreateIndex: true,  useUnifiedTopology: true })
 	.then(() => console.log("Connection to Mongo DB established"))
 	.catch(err => console.log(err));
 

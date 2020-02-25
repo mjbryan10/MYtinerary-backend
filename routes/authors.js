@@ -1,7 +1,7 @@
-const express = require("express");
-const authorModel = require("../model/authorModel");
+import { Router } from "express";
+import authorModel from "../model/authorModel";
 
-const router = express.Router();
+const router = Router();
 
 router.get("/all", (req, res) => {
 	authorModel
@@ -31,4 +31,4 @@ router.get("/search", (req, res) => {
 router.get("/test", (req, res) => {
 	res.send({ msg: "author test route." });
 });
-module.exports = router;
+export default router;
