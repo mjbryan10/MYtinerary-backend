@@ -11,14 +11,12 @@ router.get("/all", (req, res) => {
 		.catch(err => console.error(err));
 });
 
-router.get("/search", (req, res) => {
-	var query = {};
-	if (req.body.city_id) {
-		query.city_id = req.body.city_id;
-	}
-	find(query)
-		.then(files => {
-			res.send(files);
+router.get("/:cityId", (req, res) => {
+	let cityRequested = req.params.cityId;
+	itineraryModel
+		.find({ city_id: cityRequested })
+		.then(itineraries => {
+			res.send(itineraries);
 		})
 		.catch(err => console.error(err));
 });

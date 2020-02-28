@@ -11,14 +11,15 @@ router.get("/all", (req, res) => {
 		.catch(err => console.error(err));
 });
 
-router.get("/:name", ((req, res) => {
-	let cityRequested = req.params.name
-	findOne({name: cityRequested})
+router.get("/:name", (req, res) => {
+	let cityRequested = req.params.name;
+	cityModel
+		.findOne({ name: cityRequested })
 		.then(city => {
 			res.send(city);
 		})
 		.catch(err => console.error(err));
-}))
+});
 
 router.post("/", (req, res) => {
 	find({ name: req.body.name, country: req.body.country }).then(results => {
