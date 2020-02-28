@@ -1,10 +1,11 @@
-import { Router } from "express";
-import { find } from "../model/itineraryModel";
+const express = require("express");
+const itineraryModel = require("../model/itineraryModel");
 
-const router = Router();
+const router = express.Router();
 
 router.get("/all", (req, res) => {
-	find({})
+	itineraryModel
+		.find({})
 		.then(files => {
 			res.send(files);
 		})
@@ -24,4 +25,4 @@ router.get("/:cityId", (req, res) => {
 router.get("/test", (req, res) => {
 	res.send({ msg: "itinerary test route." });
 });
-export default router;
+module.exports = router;

@@ -1,10 +1,11 @@
-import { Router } from "express";
-import cityModel, { find, findOne, findOneAndDelete } from "../model/cityModel";
+const express = require("express");
+const cityModel = require("../model/cityModel");
 
-const router = Router();
+const router = express.Router();
 
 router.get("/all", (req, res) => {
-	find({})
+	cityModel
+		.find({})
 		.then(files => {
 			res.send(files);
 		})
@@ -22,7 +23,7 @@ router.get("/:name", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-	find({ name: req.body.name, country: req.body.country }).then(results => {
+	cityModel.find({ name: req.body.name, country: req.body.country }).then(results => {
 		if (!results.length) {
 			const newCity = new cityModel({
 				name: req.body.name,
@@ -44,7 +45,7 @@ router.post("/", (req, res) => {
 });
 
 router.delete("/", (req, res) => {
-	findOneAndDelete({ name: req.body.name, country: req.body.country }, err => {
+	cityModel.findOneAndDelete({ name: req.body.name, country: req.body.country }, err => {
 		if (err) return res.send(500, err);
 		res.send(`${req.body.name} ${req.body.country} has been deleted`);
 	});
@@ -53,4 +54,4 @@ router.delete("/", (req, res) => {
 router.get("/test", (req, res) => {
 	res.send({ msg: "Cities test route." });
 });
-export default router;
+module.exports = router;

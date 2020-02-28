@@ -1,6 +1,6 @@
-import { Schema, model } from "mongoose";
+const mongoose = require("mongoose");
 
-const citySchema = new Schema({
+const citySchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: true
@@ -13,4 +13,4 @@ const citySchema = new Schema({
 });
 
 //name of module is the singular version (city) of the database name (cities)
-export default model('city', citySchema) 
+module.exports = mongoose.model('city', citySchema)
