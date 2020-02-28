@@ -16,5 +16,5 @@ const authorSchema = new mongoose.Schema({
 	}
 });
 
-//name of module is the singular version (city) of the database name (cities)
+//name of module is the singular version (author) of the database name (authors)
 module.exports = mongoose.model('author', authorSchema) 
