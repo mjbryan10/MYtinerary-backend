@@ -12,19 +12,6 @@ router.get("/all", (req, res) => {
 		.catch(err => console.error(err));
 });
 
-// router.get("/search", (req, res) => {
-// 	var query = {};
-// 	if (req.body.city_id) {
-// 		query.city_id = req.body.city_id;
-// 	}
-// 	itineraryModel
-// 		.find(query)
-// 		.then(files => {
-// 			res.send(files);
-// 		})
-// 		.catch(err => console.error(err));
-// });
-
 router.get("/:cityId", (req, res) => {
 	let cityRequested = req.params.cityId;
 	itineraryModel
