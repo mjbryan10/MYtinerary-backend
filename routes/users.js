@@ -1,5 +1,6 @@
 const express = require("express");
 const userModel = require("../model/userModel");
+const bcrypt = require("bcrypt");
 
 const router = express.Router();
 
@@ -40,22 +41,30 @@ router.post(
 	(req, res) => {
 		userModel.find({ email: req.body.email }).then(results => {
 			const errors = validationResult(req);
+
 			if (!errors.isEmpty()) {
 				return res.status(422).json({ errors: errors.array() });
 			}
 			if (!results.length) {
-				const newUser = new userModel({
-					email: req.body.email,
-					password: req.body.password,
+				bcrypt.hash(req.body.password, 10, function(err, hash) {
+					if (err) {
+						throw err;
+					} else {
+						// Store hash in your password DB.
+						const newUser = new userModel({
+							email: req.body.email,
+							password: hash,
+						});
+						newUser
+							.save()
+							.then(user => {
+								res.send(user);
+							})
+							.catch(err => console.error(err));
+					}
 				});
-				newUser
-					.save()
-					.then(user => {
-						res.send(user);
-					})
-					.catch(err => console.error(err));
 			} else {
-				res.send({duplicate: true, msg: "This email is already in use"});
+				res.send({ duplicate: true, msg: "This email is already in use" });
 				console.error("User submitted duplicate email");
 			}
 		});

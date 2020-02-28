@@ -23,4 +23,6 @@ const userSchema = new mongoose.Schema({
     }
 });
 
+//POSSIBLY RETURN ENCRYPTED PASSWORD HERE
+
 module.exports = mongoose.model('user', userSchema) 
