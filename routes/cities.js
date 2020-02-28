@@ -12,13 +12,15 @@ router.get("/all", (req, res) => {
 		.catch(err => console.error(err));
 });
 
-// console.log(
-// 	"TCL test",
-// 	cityModel.find({ name: "Dubai" }).then(files => {
-// 		console.log("TCL: files", files);
-// 		res.send(files);
-// 	})
-// );
+router.get("/:name", (req, res) => {
+	let cityRequested = req.params.name;
+	cityModel
+		.findOne({ name: cityRequested })
+		.then(city => {
+			res.send(city);
+		})
+		.catch(err => console.error(err));
+});
 
 router.post("/", (req, res) => {
 	cityModel.find({ name: req.body.name, country: req.body.country }).then(results => {

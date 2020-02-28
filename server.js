@@ -22,4 +22,7 @@ mongoose
 	.then(() => console.log("Connection to Mongo DB established"))
 	.catch(err => console.log(err));
 
-app.use("/cities", require("./routes/cities"));
+app.use("/citiesAPI", require("./routes/cities"));
+app.use("/itinerariesAPI", require("./routes/itineraries"));
+app.use("/authorsAPI", require("./routes/authors"));
+app.use("/usersAPI", require("./routes/users"));
