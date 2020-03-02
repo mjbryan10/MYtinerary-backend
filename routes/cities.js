@@ -17,7 +17,13 @@ router.get("/:name", (req, res) => {
 	cityModel
 		.findOne({ name: cityRequested })
 		.then(city => {
-			res.send(city);
+			//TODO: Make this more stable
+			if (city) {
+				res.send(city);
+			}
+			else {
+				res.send({error: "No city found"})
+			}
 		})
 		.catch(err => console.error(err));
 });

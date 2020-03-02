@@ -1,6 +1,8 @@
 const express = require("express");
 const userModel = require("../model/userModel");
 const bcrypt = require("bcrypt");
+const key = require("../config.js").secretOrKey;
+const jwt = require("jsonwebtoken");
 
 const router = express.Router();
 
@@ -29,7 +31,7 @@ router.get("/test", (req, res) => {
 
 const { check, validationResult } = require("express-validator");
 router.post(
-	"/",
+	"/create",
 	[
 		// username must be an email
 		check("email").isEmail(),
@@ -70,5 +72,48 @@ router.post(
 		});
 	}
 );
+
+router.post("/login", (req, res) => {
+	userModel
+		.findOne({ email: req.body.email })
+		.then(user => {
+			if (user) {
+				bcrypt.compare(req.body.password, user.password, function(err, isMatch) {
+					if (err) throw err;
+					if (isMatch) {
+						console.log("TCL: result", isMatch);
+						const payload = {
+							id: user._id,
+							username: user.name,
+							// avatarPicture: user.avatarPicture, //TODO
+						};
+						const options = { expiresIn: 2592000 };
+						jwt.sign(payload, key, options, (err, token) => {
+							if (err) {
+								res.json({
+									success: false,
+									token: "There was an error",
+								});
+							} else {
+								res.json({
+									success: true,
+									token: token,
+								});
+							}
+						});
+					} else {
+						res.send({ success: false, msg: "Incorrect login details" });
+					}
+				});
+			} else {
+				res.send({ success: false, msg: "Incorrect login details" })
+			}
+		})
+		.catch(err => {
+			res.errors = err;
+			console.error(err);
+		});
+	// res.send(result)
+});
 
 module.exports = router;
