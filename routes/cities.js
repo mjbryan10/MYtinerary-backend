@@ -1,13 +1,47 @@
 const express = require("express");
 const cityModel = require("../model/cityModel");
+const jwt = require("jsonwebtoken");
+const jwtDecode = require("jwt-decode");
+const secret = require("../config.js").secretOrKey;
 
 const router = express.Router();
 
 router.get("/all", (req, res) => {
+	let token = req.headers['x-api-key'];
+	if (!token) {
+		return res.status(401).send({ error: "No token provided" });
+	}
+	// let token = jwt.verify(req.body.token, secret);
+	
+	try {
+		jwt.verify(token, secret);
+	} catch(err) {
+		// err
+		return res.status(403).send({error: "invalid token"});
+	}
+	let decoded = jwtDecode(token);
+	
+	if (decoded.exp < Date.now()) {
+
+		cityModel
+			.find({})
+			.then(files => {
+				res.send(files);
+			})
+			.catch(err => console.error(err));
+	} else {
+		// res.redirect("/login") //return response, front to reroute
+		res.send({ error: "Token has expired" });
+	}
+});
+
+router.get("/top", (req, res) => {
 	cityModel
 		.find({})
-		.then(files => {
-			res.send(files);
+		.sort({ _id: 1 })
+		.limit(12)
+		.then(cities => {
+			res.send(cities);
 		})
 		.catch(err => console.error(err));
 });
@@ -20,9 +54,8 @@ router.get("/:name", (req, res) => {
 			//TODO: Make this more stable
 			if (city) {
 				res.send(city);
-			}
-			else {
-				res.send({error: "No city found"})
+			} else {
+				res.send({ error: "No city found" });
 			}
 		})
 		.catch(err => console.error(err));

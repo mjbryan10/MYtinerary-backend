@@ -30,3 +30,4 @@ app.use("/citiesAPI", require("./routes/cities"));
 app.use("/itinerariesAPI", require("./routes/itineraries"));
 app.use("/authorsAPI", require("./routes/authors"));
 app.use("/usersAPI", require("./routes/users"));
+app.use("/commentsAPI", require("./routes/comments"));

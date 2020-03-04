@@ -3,6 +3,7 @@ const userModel = require("../model/userModel");
 const bcrypt = require("bcrypt");
 const key = require("../config.js").secretOrKey;
 const jwt = require("jsonwebtoken");
+const jwtDecode = require("jwt-decode");
 
 const router = express.Router();
 
@@ -52,7 +53,7 @@ router.post(
 					if (err) {
 						throw err;
 					} else {
-						// Store hash in your password DB.
+						// Store hash in DB.
 						const newUser = new userModel({
 							email: req.body.email,
 							password: hash,
@@ -81,13 +82,13 @@ router.post("/login", (req, res) => {
 				bcrypt.compare(req.body.password, user.password, function(err, isMatch) {
 					if (err) throw err;
 					if (isMatch) {
-						console.log("TCL: result", isMatch);
 						const payload = {
 							id: user._id,
 							username: user.name,
 							// avatarPicture: user.avatarPicture, //TODO
 						};
 						const options = { expiresIn: 2592000 };
+						// const options = { expiresIn: 30000 };
 						jwt.sign(payload, key, options, (err, token) => {
 							if (err) {
 								res.json({
@@ -106,7 +107,7 @@ router.post("/login", (req, res) => {
 					}
 				});
 			} else {
-				res.send({ success: false, msg: "Incorrect login details" })
+				res.send({ success: false, msg: "Incorrect login details" });
 			}
 		})
 		.catch(err => {
@@ -116,4 +117,29 @@ router.post("/login", (req, res) => {
 	// res.send(result)
 });
 
+router.post("/user", (req, res) => {
+	let decoded = {};
+	if (req.body.token) {
+		let token = req.body.token;
+		decoded = jwtDecode(token);
+
+		// console.log("TCL: decoded", decoded);
+		//TODO: check if user is logged in
+
+		// console.log(decoded);
+		// console.log("Date now", Date.now())
+		if (decoded.exp >= Date.now()) {
+			res.send({ expired: true, msg: "Your session has expired, please log in again." });
+		}
+		userModel.findOne({ _id: decoded.id }).then(user => {
+			res.send({ name: user.name || user.email, img: user.img || "" });
+		});
+	} else {
+		res.send({ error: true, msg: "Token was not valid" });
+	}
+});
+
 module.exports = router;
+
+
+// res.send({ testisworking: req.body.test})
