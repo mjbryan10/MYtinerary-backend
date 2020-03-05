@@ -6,12 +6,12 @@ const router = express.Router();
 router.post("/post", (req, res) => {
 	let token = isTokenValid(req.headers["x-api-key"]);
 	if (token === false) {
-		return res.status(403).send({ error: "Invalid Token" });
+		return res.status(403).send({ success: false, msg: "Invalid Token" });
 	}
 	if (!req.body.text || !req.body.itin || !req.body.author) {
 		return res
 			.status(400)
-			.send({ error: "Must include (itin) id, (author) and comment (text)" });
+			.send({ success: false, msg: "Must include (itin) id, (author) and comment (text)" });
 	}
 	const newComment = new commentModel({
 		itin_id: req.body.itin,
@@ -35,19 +35,15 @@ router.post("/post", (req, res) => {
 		.catch(err => console.error(err));
 });
 
-router.get("/:itin", (req, res) => {
-    //NOTE: Token may not be needed
-	// let token = isTokenValid(req.headers["x-api-key"]);
-	// if (token === false) {
-	// 	return res.status(403).send({ error: "Invalid Token" });
-	// }
+router.get("/:itin/:page?", (req, res) => {
 	if (!req.params.itin) {
 		return res.status(400).send({ error: "Must include (itin)" });
 	}
+	let limit = req.params.page * 10 || 3;
 	commentModel
 		.find({ itin_id: req.params.itin })
 		.sort({ posted: -1 })
-		.limit(10)
+		.limit(limit)
 		.then(comments => {
 			if (comments.length) {
 				res.send({ success: true, comments });
