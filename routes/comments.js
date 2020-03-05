@@ -30,6 +30,7 @@ router.post("/post", (req, res) => {
 			return res.send({
 				success: true,
 				msg: "Your comment has been successfully submitted",
+				comment,
 			});
 		})
 		.catch(err => console.error(err));
@@ -56,14 +57,17 @@ router.get("/:itin/:page?", (req, res) => {
 router.delete("/delete", (req, res) => {
 	let token = isTokenValid(req.headers["x-api-key"]);
 	if (token === false) {
-		return res.status(403).send({ error: "Invalid Token" });
+		return res.status(403).send({success: false, msg: "Invalid Token" });
 	}
-	if (!req.body.id) return res.send(400, "No ID was provided");
-	commentModel.findOneAndDelete({ _id: req.body.id, author: { id: token.id } }, err => {
-		if (err) return res.send(500, err);
-		return res.send(200, "Comment successfully deleted!");
+	if (!req.body.id) return res.status(400).send({success: false, msg: "No ID was provided"});
+
+	// commentModel.findOneAndDelete({ _id: req.body.id }, err => {
+	commentModel.findOneAndDelete({ _id: req.body.id, 'author.id': token.id }, err => {
+		if (err) return res.status(500).send(err);
+		return res.status(200).send({success: true, msg: "Comment successfully deleted!", id: req.body.id});
 	});
-	return res.send(500, "Please ensure that you the author matches the request.");
+	// return res.status(500).send({success: false, msg: "Please ensure that the author matches the request."});
 });
+
 
 module.exports = router;

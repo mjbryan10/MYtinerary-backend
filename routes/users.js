@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const key = require("../config.js").secretOrKey;
 const jwt = require("jsonwebtoken");
 const jwtDecode = require("jwt-decode");
+const isTokenValid = require("../global/tokenValidation");
 
 const router = express.Router();
 
@@ -139,7 +140,16 @@ router.post("/user", (req, res) => {
 	}
 });
 
+router.post("/validate", (req, res) => {
+	let token = isTokenValid(req.headers["x-api-key"]);
+	if (token === false) {
+		return res.status(403).send({ error: "Invalid Token" });
+	}
+	if (token.id === req.body.id)
+		return res.send({ success: true, msg: "User is validated." });
+	else return res.send({ success: false, msg: "User is not valid for this action" });
+});
+
+
 module.exports = router;
 
-
-// res.send({ testisworking: req.body.test})
