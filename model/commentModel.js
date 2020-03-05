@@ -5,14 +5,36 @@ const commentSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
-	comments: [{
-		author_id: String,
-		author: String,
-        // title: String,
-        body: String,
-        // likes: Array,
-        // score: Number,
-	}],
+	posted: {
+		type: Number,
+		required: true,
+	},
+	author: {
+		id: {
+			type: String,
+			required: true,
+		},
+		name: {
+			type: String,
+			required: true,
+		},
+	},
+	title: {
+		type: String,
+		required: false,
+	},
+	text: {
+		type: String,
+		required: true,
+	},
+	rating: {
+		type: Number,
+		required: false,
+	},
+	likes: {
+		type: Array,
+		required: false,
+	}
 });
 
 module.exports = mongoose.model("comment", commentSchema);
