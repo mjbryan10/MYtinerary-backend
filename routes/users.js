@@ -140,6 +140,7 @@ router.post("/user", (req, res) => {
 	}
 });
 
+//CHECKS IF USER ID MATCHES TOKEN ID
 router.post("/validate", (req, res) => {
 	let token = isTokenValid(req.headers["x-api-key"]);
 	if (token === false) {
@@ -150,6 +151,33 @@ router.post("/validate", (req, res) => {
 	else return res.send({ success: false, msg: "User is not valid for this action" });
 });
 
+//UPDATE FAVOURITES
+router.put("/:action/:field", (req, res) => {
+	let action = req.params.action;
+	console.log("action", action);
+	let field = req.params.field;
+	if (!action || !field || !(field in req.body)) {
+		return res.status(400).send({ success: false, msg: "There was a missing parameter" });
+	}
+	let token = isTokenValid(req.headers["x-api-key"]);
+	console.log("token", token);
+	if (token === false) {
+		return res.status(403).send({ error: "Invalid Token" });
+	}
+	let command = "";
+	if (action === "add") command = "$addToSet";
+	if (action === "del") command = "$pull";
+	if (field === "fav") {
+		userModel
+			.updateOne(
+				{ _id: token.id },
+				{ [command]: { favourites: req.body.fav } }
+			)
+			.then(fav => {
+				res.send({success: true, msg: `Action ${action} completed`});
+			})
+			.catch(err => console.error(err));
+	}
+});
 
 module.exports = router;
-

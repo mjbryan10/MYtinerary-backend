@@ -3,26 +3,30 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
 	name: {
 		type: String,
-		required: false
+		required: false,
 	},
 	img: {
-        type: String,
-        required: false
+		type: String,
+		required: false,
 	},
 	itineraries: {
 		type: Array,
-		required: false
-    },
-    email: {
-        type: String,
-        required: true,
-    },
-    password: {
-        type: String,
-        required: true
-    }
+		required: false,
+	},
+	email: {
+		type: String,
+		required: true,
+	},
+	password: {
+		type: String,
+		required: true,
+	},
+	favourites: {
+		type: Array,
+		required: false,
+	},
 });
 
 //POSSIBLY RETURN ENCRYPTED PASSWORD HERE
 
-module.exports = mongoose.model('user', userSchema) 
+module.exports = mongoose.model("user", userSchema);
