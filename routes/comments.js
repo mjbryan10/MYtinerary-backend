@@ -36,23 +36,47 @@ router.post("/post", (req, res) => {
 		.catch(err => console.error(err));
 });
 
-router.get("/:itin/:page?", (req, res) => {
+// router.get("/:itin/:page?", (req, res) => {
+// 	if (!req.params.itin) {
+// 		return res.status(400).send({ error: "Must include (itin)" });
+// 	}
+// 	let limit = req.params.page * 10 || 3;
+// 	commentModel
+// 		.find({ itin_id: req.params.itin })
+// 		.sort({ posted: -1 })
+// 		.limit(limit)
+// 		.then(comments => {
+// 			if (comments.length) {
+// 				res.send({ success: true, comments });
+// 			} else {
+// 				res.send({ success: false, msg: "No comments found" });
+// 			}
+// 		});
+// });
+
+router.get("/:itin/:page?", async (req, res) => {
 	if (!req.params.itin) {
 		return res.status(400).send({ error: "Must include (itin)" });
 	}
 	let limit = req.params.page * 10 || 3;
+	let count = await commentModel.countDocuments({ itin_id: req.params.itin });
+
 	commentModel
 		.find({ itin_id: req.params.itin })
 		.sort({ posted: -1 })
 		.limit(limit)
 		.then(comments => {
 			if (comments.length) {
-				res.send({ success: true, comments });
+				res.send({ success: true, comments, count });
 			} else {
 				res.send({ success: false, msg: "No comments found" });
 			}
 		});
 });
+
+
+
+
 
 router.delete("/delete", (req, res) => {
 	let token = isTokenValid(req.headers["x-api-key"]);
