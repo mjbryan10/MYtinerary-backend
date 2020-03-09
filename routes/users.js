@@ -17,15 +17,18 @@ router.get("/all", (req, res) => {
 		.catch(err => console.error(err));
 });
 
-router.get("/:user", (req, res) => {
-	let userId = req.params.user;
-	userModel
-		.findOne({ _id: userId })
-		.then(user => {
-			res.send(user);
-		})
-		.catch(err => console.error(err));
-});
+//TODO: Consider changing for token.
+
+// IN USE?
+// router.get("/:user", (req, res) => {
+// 	let userId = req.params.user;
+// 	userModel
+// 		.findOne({ _id: userId })
+// 		.then(user => {
+// 			res.send(user);
+// 		})
+// 		.catch(err => console.error(err));
+// });
 
 router.get("/test", (req, res) => {
 	res.send({ msg: "user test route." });
@@ -133,7 +136,13 @@ router.post("/user", (req, res) => {
 			res.send({ expired: true, msg: "Your session has expired, please log in again." });
 		}
 		userModel.findOne({ _id: decoded.id }).then(user => {
-			res.send({ name: user.name || user.email, img: user.img || "" });
+			// res.send({ name: user.name || user.email, img: user.img || "" });
+			//DEV: Adding favourites to user info:
+			res.send({
+				name: user.name || user.email,
+				img: user.img || "",
+				favourites: user.favourites || [],
+			});
 		});
 	} else {
 		res.send({ error: true, msg: "Token was not valid" });
@@ -154,13 +163,11 @@ router.post("/validate", (req, res) => {
 //UPDATE FAVOURITES
 router.put("/:action/:field", (req, res) => {
 	let action = req.params.action;
-	console.log("action", action);
 	let field = req.params.field;
 	if (!action || !field || !(field in req.body)) {
 		return res.status(400).send({ success: false, msg: "There was a missing parameter" });
 	}
 	let token = isTokenValid(req.headers["x-api-key"]);
-	console.log("token", token);
 	if (token === false) {
 		return res.status(403).send({ error: "Invalid Token" });
 	}
@@ -169,15 +176,33 @@ router.put("/:action/:field", (req, res) => {
 	if (action === "del") command = "$pull";
 	if (field === "fav") {
 		userModel
-			.updateOne(
-				{ _id: token.id },
-				{ [command]: { favourites: req.body.fav } }
-			)
+			.updateOne({ _id: token.id }, { [command]: { favourites: req.body.fav } })
 			.then(fav => {
-				res.send({success: true, msg: `Action ${action} completed`});
+				res.send({ success: true, msg: `Action ${action} completed` });
 			})
 			.catch(err => console.error(err));
 	}
+});
+
+//FETCH FAV:
+router.get("/user/favourites", (req, res) => {
+	// let field = req.params.field;
+	// if (!field) {
+	// 	return res.status(400).send({succes: false, msg: "Missing property field!"})
+	// }
+	let token = isTokenValid(req.headers["x-api-key"]);
+	if (token === false) {
+		return res.status(403).send({ success: false, invalidToken: true, msg: "Invalid Token" });
+	}
+	userModel
+		.findOne({ _id: token.id })
+		.then(user => {
+			res.send({ success: true, favourites: user.favourites });
+		})
+		.catch(err => {
+			console.error(err);
+			res.send({ success: false, [field]: [], msg: "Something went wrong!" });
+		});
 });
 
 module.exports = router;
