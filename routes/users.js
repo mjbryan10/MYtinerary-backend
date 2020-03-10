@@ -1,7 +1,7 @@
 const express = require("express");
 const userModel = require("../model/userModel");
 const bcrypt = require("bcrypt");
-const key = require("../config.js").secretOrKey;
+const key = process.env.TOKEN_KEY;
 const jwt = require("jsonwebtoken");
 const jwtDecode = require("jwt-decode");
 const isTokenValid = require("../global/tokenValidation");
@@ -192,7 +192,9 @@ router.get("/user/favourites", (req, res) => {
 	// }
 	let token = isTokenValid(req.headers["x-api-key"]);
 	if (token === false) {
-		return res.status(403).send({ success: false, invalidToken: true, msg: "Invalid Token" });
+		return res
+			.status(403)
+			.send({ success: false, invalidToken: true, msg: "Invalid Token" });
 	}
 	userModel
 		.findOne({ _id: token.id })

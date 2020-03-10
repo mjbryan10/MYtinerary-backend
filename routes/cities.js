@@ -2,27 +2,26 @@ const express = require("express");
 const cityModel = require("../model/cityModel");
 const jwt = require("jsonwebtoken");
 const jwtDecode = require("jwt-decode");
-const secret = require("../config.js").secretOrKey;
+const secret = process.env.TOKEN_KEY;
 
 const router = express.Router();
 
 router.get("/all", (req, res) => {
-	let token = req.headers['x-api-key'];
+	let token = req.headers["x-api-key"];
 	if (!token) {
 		return res.status(401).send({ error: "No token provided" });
 	}
 	// let token = jwt.verify(req.body.token, secret);
-	
+
 	try {
 		jwt.verify(token, secret);
-	} catch(err) {
+	} catch (err) {
 		// err
-		return res.status(403).send({error: "invalid token"});
+		return res.status(403).send({ error: "invalid token" });
 	}
 	let decoded = jwtDecode(token);
-	
-	if (decoded.exp < Date.now()) {
 
+	if (decoded.exp < Date.now()) {
 		cityModel
 			.find({})
 			.then(files => {
