@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-require('dotenv').config();
+require("dotenv").config();
 const URI = process.env.MONGO_URI;
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -26,6 +26,11 @@ mongoose
 	.connect(URI, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
 	.then(() => console.log("Connection to Mongo DB established"))
 	.catch(err => console.log(err));
+
+app.get("/", (req, res) => {
+	console.log("Server is running!");
+	res.send("Server is running!");
+});
 
 app.use("/citiesAPI", require("./routes/cities"));
 app.use("/itinerariesAPI", require("./routes/itineraries"));
