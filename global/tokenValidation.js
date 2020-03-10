@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const jwtDecode = require("jwt-decode");
+require('dotenv').config();
 const secret = process.env.TOKEN_KEY;
 
 function isTokenValid(token) {
