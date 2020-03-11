@@ -8,7 +8,8 @@ To view the front-end code, please visit [here](https://github.com/mjbryan10/MYt
 
 This application was written using [Express.js](https://expressjs.com/) and uses [MongoDB](https://www.mongodb.com/) for databasing. 
 
-##[Live Demo](https://mjbryan10.github.io/MYtinerary/#/)
+##Live Demo
+[MYtinerary live demo](https://mjbryan10.github.io/MYtinerary/#/)
 
 ## Learn More
 
