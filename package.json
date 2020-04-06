@@ -28,7 +28,9 @@
 		"express-validator": "^6.4.0",
 		"jsonwebtoken": "^8.5.1",
 		"jwt-decode": "^2.2.0",
-		"mongoose": "^5.9.4",
+		"minimist": "^1.2.5",
+		"mkdirp": "^1.0.4",
+		"mongoose": "^5.9.7",
 		"passport": "^0.4.1",
 		"passport-jwt": "^4.0.0"
 	}
